@@ -1,122 +1,99 @@
 !###################################################################
 ! TITLE        : ACRU_MENU_LOG
 !-------------------------------------------------------------------
-! CREATED BY   : Charmaine Bonifacio
-! DATE REVISED : July 28, 2015
+! CREATED BY   : CHARMAINE BONIFACIO
+! DATE REVISED : JULY 30, 2015
 !-------------------------------------------------------------------
-! DESCRIPTION  : This is a test run for implementing the logfile
-!                system.
-! REQUIREMENT  : MUST run the .EXE file within the input directory.
+! DESCRIPTION  : THIS IS A TEST RUN FOR IMPLEMENTING THE LOGFILE
+!                SYSTEM.
+! REQUIREMENT  : MUST RUN THE .EXE FILE WITHIN THE INPUT DIRECTORY.
 ! INPUT        : 1) MENU FILE = MENU
-!                2) VARIABLE FILE = menu_variable.txt
-! OUTPUT       : 1) LOG File
-!                2) Updated Menu File
+!                2) VARIABLE FILE = MENU_VARIABLE.TXT
+! OUTPUT       : 1) LOG FILE
+!                2) UPDATED MENU FILE
 !###################################################################
-PROGRAM ACRU_MENU_LOG
-USE M_SYSTEMCHECK
-USE M_SYSTEMLOG
-IMPLICIT NONE
+program acru_menu_log
+use m_systemcheck
+use m_systemlog
+implicit none
 
-CHARACTER(LEN=10), PARAMETER :: debugSTAT = '[ STATUS ] '
-CHARACTER(LEN=10), PARAMETER :: debugRES = '[ RESULT ] '
-CHARACTER(LEN=10), PARAMETER :: debugASK = '[  ASK  ] '
-INTEGER :: LINE,I,J,K,L,M,N,O,P,OK,IOcheck
-INTEGER :: ISUBNO
-INTEGER :: COUNT_0, COUNT_1, COUNT_RATE, COUNT_MAX
-CHARACTER(LEN=4), PARAMETER :: MENU = 'MENU'
-CHARACTER(LEN=50), PARAMETER :: MENUVARS = "menu_variable.txt"
-CHARACTER(LEN=200) :: OUTFILE, INFILE, VARFILE, TMPFILE, LOGRUN
-CHARACTER(LEN=200) :: MENUCOPY, MENUTMP, DIR, COPYFILE, KILLFILE
-CHARACTER(LEN=80) :: DUMMY
-CHARACTER(LEN=8) :: DATEINFO
-CHARACTER(LEN=4) :: YEAR, MONTH*2, DAY*2
-CHARACTER(LEN=2) :: HRS, MIN, SEC*6
-CHARACTER(LEN=10) :: DATE, TIMEINFO, TIMENOW*12, DATENOW, TIMEEND*12, DATEEND
-LOGICAL :: EX
+character(len=10), parameter :: debugstat = '[ status ] '
+character(len=10), parameter :: debugres = '[ result ] '
+character(len=10), parameter :: debugask = '[  ask  ] '
+integer :: line,i,j,k,l,m,n,o,p,ok,iocheck
+integer :: isubno
+integer :: count_0, count_1, count_rate, count_max
+character(len=4), parameter :: menu = 'menu'
+character(len=50), parameter :: menuvars = "menu_variable.txt"
+character(len=200) :: outfile, infile, varfile, tmpfile, logrun
+character(len=200) :: menucopy, menutmp, dir, copyfile, killfile
+character(len=80) :: dummy
+character(len=8) :: dateinfo
+character(len=4) :: year, month*2, day*2
+character(len=2) :: hrs, min, sec*6
+character(len=10) :: date, timeinfo, timenow*12, datenow, timeend*12, dateend
+logical :: ex
 
 !***********************************************************************
-! Setup Program Time
+! SETUP PROGRAM TIME
 !***********************************************************************
-      CALL SYSTEM_CLOCK(COUNT_0, COUNT_RATE, COUNT_MAX)
-      CALL DATETIMELOG(DATE, DATENOW, TIMENOW)
+      call system_clock(count_0, count_rate, count_max)
+      call datetimelog(date, datenow, timenow)
 !***********************************************************************
 ! START PROGRAM
 !***********************************************************************
-      WRITE(*,*)
-      WRITE(*,*) "###################################################################"
-      WRITE(*,*) ' '
-      WRITE(*,*) ' The ACRU_MENU program will COPY values from a tab-delimited file. '
-      WRITE(*,*) ' '
-      WRITE(*,*) "###################################################################"
-      WRITE(*,*)
-!***********************************************************************
-! USER INPUT
-!***********************************************************************
-	  WRITE(*,*) debugSTAT, ' Date of log  -> ', DATENOW
-      WRITE(*,*) debugSTAT, ' Time of log  -> ', TIMENOW
-      WRITE(*,*)
-      LOGRUN = 'LOGRUN_MENU_'//DATE//'.txt'
-      INQUIRE(FILE=LOGRUN, EXIST=EX)
-      WRITE(*,*) debugSTAT, ' Checking file: ', LOGRUN
-      IF (EX) THEN
-        OPEN(UNIT=12,FILE=LOGRUN,STATUS='REPLACE',IOSTAT=OK)
-      ELSE
-        OPEN(UNIT=12,FILE=LOGRUN,STATUS='NEW',IOSTAT=OK)
-      ENDIF
-!     IF (OK/=0) THEN
-!       WRITE(*,*) debugRES, 'COULD NOT OPEN FILE.'
-!       STOP
-!     ENDIF
-	    WRITE(*,*) debugRES, ' File opened: ', LOGRUN
-	    WRITE(*,*) debugRES, ' File status ok = ', OK
-      WRITE(12,*)
+      call startprogramlog(12)
+      write(*,*) debugstat, ' date of log  -> ', datenow
+      write(*,*) debugstat, ' time of log  -> ', timenow
+      write(*,*)
+      logrun = 'logrun_menu_'//date//'.txt'
+      inquire(file=logrun, exist=ex)
+      write(*,*) debugstat, ' checking file: ', logrun
+      if (ex) then
+        open(unit=12,file=logrun,status='replace',iostat=ok)
+      else
+        open(unit=12,file=logrun,status='new',iostat=ok)
+      endif
+!     if (ok/=0) then
+!       write(*,*) debugres, 'could not open file.'
+!       stop
+!     endif
+      write(*,*) debugres, ' file opened: ', logrun
+      write(*,*) debugres, ' file status ok = ', ok
+      write(12,*)
 !***********************************************************************
 ! START LOG
 !***********************************************************************
-      CALL STARTPROGRAMLOG(12)
-	    WRITE(12,*) debugSTAT, ' DATE -> ', DATENOW
-      WRITE(12,*) debugSTAT, ' TIME -> ', TIMENOW
-      WRITE(12,*)
-      WRITE(12,*) debugSTAT, ' LOGFILE -> ', LOGRUN
-      WRITE(12,*) debugSTAT, ' STATUS -> ', OK
-      VARFILE = MENUVARS
-	    OPEN(UNIT=10,FILE=VARFILE,IOSTAT=OK)
-	    WRITE(*,*) debugRES, ' File opened: ', VARFILE
-	    WRITE(*,*) debugRES, ' File status ok = ', OK
-      WRITE(12,*) debugSTAT, ' VARIABLE FILE -> ', VARFILE
-      WRITE(12,*) debugSTAT, ' STATUS -> ', OK
-      OUTFILE = MENU
-	    OPEN(UNIT=20,FILE=OUTFILE,IOSTAT=OK)
-      WRITE(*,*) debugRES, ' File opened: ', OUTFILE
-	    WRITE(*,*) debugRES, ' File status ok = ', OK
-      WRITE(12,*) debugSTAT, ' MENUFILE -> ', OUTFILE
-      WRITE(12,*) debugSTAT, ' STATUS -> ', OK
-      MENUCOPY = MENU//'_OLD'
-      CALL SYSTEM( "copy " // OUTFILE // " " // MENUCOPY)
-      OPEN(UNIT=30,FILE=MENUCOPY,IOSTAT=OK)
-      WRITE(*,*) debugRES, ' File opened: ', MENUCOPY
-	    WRITE(*,*) debugRES, ' File status ok = ', OK
-      WRITE(12,*) debugSTAT, ' MENUFILE COPY -> ', MENUCOPY
-      WRITE(12,*) debugSTAT, ' STATUS -> ', OK
-      CLOSE(10)
-  999 CLOSE(30)
-      CLOSE(20)
+      write(12,*) debugstat, ' date -> ', datenow
+      write(12,*) debugstat, ' time -> ', timenow
+      write(12,*)
+      write(12,*) debugstat, ' logfile -> ', logrun
+      write(12,*) debugstat, ' status -> ', ok
+      varfile = menuvars
+      open(unit=10,file=varfile,iostat=ok)
+      write(12,*) debugstat, ' variable file -> ', varfile
+      write(12,*) debugstat, ' status -> ', ok
+      outfile = menu
+      open(unit=20,file=outfile,iostat=ok)
+      write(12,*) debugstat, ' menufile -> ', outfile
+      write(12,*) debugstat, ' status -> ', ok
+      menucopy = menu//'_old'
+      call system( "copy " // outfile // " " // menucopy)
+      open(unit=30,file=menucopy,iostat=ok)
+      write(12,*) debugstat, ' menufile copy -> ', menucopy
+      write(12,*) debugstat, ' status -> ', ok
+      close(10)
+  999 close(30)
+      close(20)
 !***********************************************************************
 ! ELAPSED TIME
 !***********************************************************************
-      CALL SYSTEM_CLOCK(COUNT_1, COUNT_RATE, COUNT_MAX)
-      CALL DATETIMELOG(DATE, DATEEND, TIMEEND)
+      call system_clock(count_1, count_rate, count_max)
+      call datetimelog(date, dateend, timeend)
 !***********************************************************************
 ! END PROGRAM
 !***********************************************************************
-      CALL ENDPROGRAMLOG(12)
-      CLOSE(12)
-      WRITE(*,*) "###################################################################"
-      WRITE(*,*) ' '
-      WRITE(*,*) '   The ACRU_MENU program has finished creating a new menu file. '
-      WRITE(*,*) ' '
-      WRITE(*,*) "###################################################################"
-      WRITE(*,*)
-      WRITE(*,*) 'END OF PROGRAM. '
-   	  STOP
-END PROGRAM ACRU_MENU_LOG
+      call endprogramlog(12)
+      close(12)
+   	  stop
+end program acru_menu_log
