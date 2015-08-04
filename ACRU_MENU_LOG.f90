@@ -2,7 +2,7 @@
 ! TITLE        : ACRU_MENU_LOG
 !-------------------------------------------------------------------
 ! CREATED BY   : Charmaine Bonifacio
-! DATE REVISED : May 11, 2015
+! DATE REVISED : July 14, 2015
 !-------------------------------------------------------------------
 ! DESCRIPTION  : This is a test run for implementing the logfile
 !                system.
@@ -114,7 +114,7 @@ LOGICAL :: EX
   999 CLOSE(30)
       CLOSE(20)
 !***********************************************************************
-! Time Elapsed
+! ELAPSED TIME
 !***********************************************************************
       CALL DATE_AND_TIME(DATEINFO, TIMEINFO)
       CALL SYSTEM_CLOCK(COUNT_1, COUNT_RATE, COUNT_MAX)
