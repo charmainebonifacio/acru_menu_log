@@ -2,7 +2,7 @@
 ! TITLE        : ACRU_MENU_LOG
 !-------------------------------------------------------------------
 ! CREATED BY   : Charmaine Bonifacio
-! DATE REVISED : July 24, 2015
+! DATE REVISED : July 27, 2015
 !-------------------------------------------------------------------
 ! DESCRIPTION  : This is a test run for implementing the logfile
 !                system.
@@ -13,8 +13,8 @@
 !                2) Updated Menu File
 !###################################################################
 PROGRAM ACRU_MENU_LOG
-USE DATETIMESETUP
-USE LOGSYSTEM
+USE M_SYSTEMCHECKS
+USE M_LOGSYSTEM
 IMPLICIT NONE
 CHARACTER(LEN=10), PARAMETER :: debugSTAT = '[ STATUS ] '
 CHARACTER(LEN=10), PARAMETER :: debugRES = '[ RESULT ] '
@@ -33,7 +33,7 @@ CHARACTER(LEN=2) :: HRS, MIN, SEC*6
 CHARACTER(LEN=10) :: DATE, TIMEINFO, TIMENOW*12, DATENOW, TIMEEND*12, DATEEND
 LOGICAL :: EX
 !***********************************************************************
-! Setup new MENU file
+! Setup Program Time
 !***********************************************************************
       CALL SYSTEM_CLOCK(COUNT_0, COUNT_RATE, COUNT_MAX)
       CALL DATETIMELOG(DATE, DATENOW, TIMENOW)
