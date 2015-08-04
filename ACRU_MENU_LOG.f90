@@ -1,8 +1,8 @@
 !###################################################################
-! TITLE        : ACRU_MENU
+! TITLE        : ACRU_MENU_LOG
 !-------------------------------------------------------------------
 ! CREATED BY   : Charmaine Bonifacio
-! DATE REVISED : November 25, 2014
+! DATE REVISED : May 11, 2015
 !-------------------------------------------------------------------
 ! DESCRIPTION  : This is a test run for implementing the logfile
 !                system.
@@ -18,11 +18,8 @@ CHARACTER(LEN=10), PARAMETER :: debugSTAT = '[ STATUS ] '
 CHARACTER(LEN=10), PARAMETER :: debugRES = '[ RESULT ] '
 CHARACTER(LEN=10), PARAMETER :: debugASK = '[  ASK  ] '
 INTEGER :: LINE,I,J,K,L,M,N,O,P,OK,IOcheck
-INTEGER :: ISUBNO,LINECOIAM,LINECAY,LINEELAIM,LINEROOTA
-INTEGER :: LINEICC,LINEALBEDO,ICONS,ISWAVE
-INTEGER :: MINSUB,MAXSUB,LOOPBK
-REAL :: D1, D2
-REAL, DIMENSION(12) :: COIAM, CAY, ELAIM, ROOTA, ICC, ALBEDO
+INTEGER :: ISUBNO
+INTEGER :: COUNT_0, COUNT_1, COUNT_RATE, COUNT_MAX
 CHARACTER(LEN=4), PARAMETER :: MENU = 'MENU'
 CHARACTER(LEN=50), PARAMETER :: MENUVARS = "menu_variable.txt"
 CHARACTER(LEN=200) :: OUTFILE, INFILE, VARFILE, TMPFILE, LOGRUN
@@ -31,17 +28,13 @@ CHARACTER(LEN=80) :: DUMMY
 CHARACTER(LEN=8) :: DATEINFO
 CHARACTER(LEN=4) :: YEAR, MONTH*2, DAY*2
 CHARACTER(LEN=2) :: HRS, MIN, SEC*6
-CHARACTER(LEN=10) :: DATE, TIMEINFO, TIMENOW*12, DATENOW
-CHARACTER(LEN=*), PARAMETER:: FORMFILE = "( A70 )"
-CHARACTER(LEN=*), PARAMETER:: FORMX = "( 3X,I4 )"
-CHARACTER(LEN=*), PARAMETER:: FORMY = "( A200 )"
-CHARACTER(LEN=*), PARAMETER:: FORMZ = "( 66X,I1,5X,I1 )"
-CHARACTER(LEN=*), PARAMETER:: FORMA = "( 1X,11(F4.2,' '),F4.2,6X,I1,5X,I1,3X,I4 )"
+CHARACTER(LEN=10) :: DATE, TIMEINFO, TIMENOW*12, DATENOW, TIMEEND*12, DATEEND
 LOGICAL :: EX
 !***********************************************************************
 ! Setup new MENU file
 !***********************************************************************
       CALL DATE_AND_TIME(DATEINFO, TIMEINFO)
+      CALL SYSTEM_CLOCK(COUNT_0, COUNT_RATE, COUNT_MAX)
       YEAR = DATEINFO(1:4)
       MONTH = DATEINFO(5:6)
       DAY = DATEINFO(7:8)
@@ -120,6 +113,20 @@ LOGICAL :: EX
       CLOSE(10)
   999 CLOSE(30)
       CLOSE(20)
+!***********************************************************************
+! Time Elapsed
+!***********************************************************************
+      CALL DATE_AND_TIME(DATEINFO, TIMEINFO)
+      CALL SYSTEM_CLOCK(COUNT_1, COUNT_RATE, COUNT_MAX)
+      YEAR = DATEINFO(1:4)
+      MONTH = DATEINFO(5:6)
+      DAY = DATEINFO(7:8)
+      DATE = YEAR // '_' // MONTH // '_' // DAY
+      DATEEND = YEAR // '-' // MONTH // '-' // DAY
+      HRS = TIMEINFO(1:2)
+      MIN = TIMEINFO(3:4)
+      SEC = TIMEINFO(5:10)
+      TIMEEND = HRS // ':' // MIN // ':' // SEC
 !***********************************************************************
 ! END PROGRAM
 !***********************************************************************
