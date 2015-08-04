@@ -1,9 +1,9 @@
 !###################################################################
-! MODULE TITLE : LOGSYSTEM
+! MODULE TITLE : M_LOGSYSTEM
 !-------------------------------------------------------------------
 ! CREATED BY   : Charmaine Bonifacio
 ! DATE CREATED : July 24, 2015
-! DATE REVISED : July 24, 2015
+! DATE REVISED : July 27, 2015
 !-------------------------------------------------------------------
 ! DESCRIPTION  : The module will contain various subroutines
 !                needed for the LOG FILE to work.
@@ -12,7 +12,7 @@
 ! SUBROUTINE 2 : This subroutine will print out the end log
 !                header for this script.
 !###################################################################
-MODULE LOGSYSTEM
+MODULE M_LOGSYSTEM
 IMPLICIT NONE
 CONTAINS
    SUBROUTINE STARTPROGRAMLOG(UNIT_NO)
@@ -38,4 +38,4 @@ CONTAINS
       WRITE(UNIT_NO,*)
       WRITE(UNIT_NO,*) 'END OF PROGRAM. '
    END SUBROUTINE ENDPROGRAMLOG
-END MODULE LOGSYSTEM
+END MODULE M_LOGSYSTEM
