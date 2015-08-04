@@ -2,7 +2,7 @@
 ! TITLE        : ACRU_MENU_LOG
 !-------------------------------------------------------------------
 ! CREATED BY   : Charmaine Bonifacio
-! DATE REVISED : July 14, 2015
+! DATE REVISED : July 24, 2015
 !-------------------------------------------------------------------
 ! DESCRIPTION  : This is a test run for implementing the logfile
 !                system.
@@ -12,7 +12,9 @@
 ! OUTPUT       : 1) LOG File
 !                2) Updated Menu File
 !###################################################################
-PROGRAM ACRU_MENU
+PROGRAM ACRU_MENU_LOG
+USE DATETIMESETUP
+USE LOGSYSTEM
 IMPLICIT NONE
 CHARACTER(LEN=10), PARAMETER :: debugSTAT = '[ STATUS ] '
 CHARACTER(LEN=10), PARAMETER :: debugRES = '[ RESULT ] '
@@ -33,17 +35,8 @@ LOGICAL :: EX
 !***********************************************************************
 ! Setup new MENU file
 !***********************************************************************
-      CALL DATE_AND_TIME(DATEINFO, TIMEINFO)
       CALL SYSTEM_CLOCK(COUNT_0, COUNT_RATE, COUNT_MAX)
-      YEAR = DATEINFO(1:4)
-      MONTH = DATEINFO(5:6)
-      DAY = DATEINFO(7:8)
-      DATE = YEAR // '_' // MONTH // '_' // DAY
-      DATENOW = YEAR // '-' // MONTH // '-' // DAY
-      HRS = TIMEINFO(1:2)
-      MIN = TIMEINFO(3:4)
-      SEC = TIMEINFO(5:10)
-      TIMENOW = HRS // ':' // MIN // ':' // SEC
+      CALL DATETIMELOG(DATE, DATENOW, TIMENOW)
 !***********************************************************************
 ! START PROGRAM
 !***********************************************************************
@@ -78,14 +71,7 @@ LOGICAL :: EX
 !***********************************************************************
 ! START LOG
 !***********************************************************************
-      WRITE(12,*) 'START OF PROGRAM. '
-      WRITE(12,*)
-      WRITE(12,*) "###################################################################"
-      WRITE(12,*) ' '
-      WRITE(12,*) ' The ACRU_MENU program will COPY values from a tab-delimited file. '
-      WRITE(12,*) ' '
-      WRITE(12,*) "###################################################################"
-      WRITE(12,*)
+      CALL STARTPROGRAMLOG(12)
 	    WRITE(12,*) debugSTAT, ' DATE -> ', DATENOW
       WRITE(12,*) debugSTAT, ' TIME -> ', TIMENOW
       WRITE(12,*)
@@ -116,27 +102,12 @@ LOGICAL :: EX
 !***********************************************************************
 ! ELAPSED TIME
 !***********************************************************************
-      CALL DATE_AND_TIME(DATEINFO, TIMEINFO)
       CALL SYSTEM_CLOCK(COUNT_1, COUNT_RATE, COUNT_MAX)
-      YEAR = DATEINFO(1:4)
-      MONTH = DATEINFO(5:6)
-      DAY = DATEINFO(7:8)
-      DATE = YEAR // '_' // MONTH // '_' // DAY
-      DATEEND = YEAR // '-' // MONTH // '-' // DAY
-      HRS = TIMEINFO(1:2)
-      MIN = TIMEINFO(3:4)
-      SEC = TIMEINFO(5:10)
-      TIMEEND = HRS // ':' // MIN // ':' // SEC
+      CALL DATETIMELOG(DATE, DATEEND, TIMEEND)
 !***********************************************************************
 ! END PROGRAM
 !***********************************************************************
-      WRITE(12,*) "###################################################################"
-      WRITE(12,*) ' '
-      WRITE(12,*) '   The ACRU_MENU program has finished creating a new menu file. '
-      WRITE(12,*) ' '
-      WRITE(12,*) "###################################################################"
-      WRITE(12,*)
-      WRITE(12,*) 'END OF PROGRAM. '
+      CALL ENDPROGRAMLOG(12)
       CLOSE(12)
       WRITE(*,*) "###################################################################"
       WRITE(*,*) ' '
@@ -146,4 +117,4 @@ LOGICAL :: EX
       WRITE(*,*)
       WRITE(*,*) 'END OF PROGRAM. '
    	  STOP
-END PROGRAM ACRU_MENU
+END PROGRAM ACRU_MENU_LOG
