@@ -9,7 +9,7 @@ Implemented a log system to ensure accuracy for all ACRU model menu runs.
 
 The purpose is to revise the scripts to Fortran 90 and compiled using the SilverFrost Plato Fortran 95 compiler.
 
-# License
+## License
 
 The modules and scripts are licensed under a GNU General Public License v2.0
 
